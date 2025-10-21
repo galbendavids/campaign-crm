@@ -1,22 +1,23 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Container } from '@mui/material';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Container } from "@mui/material";
 
-import Header from './components/Header';
-import Dashboard from './pages/Dashboard';
-import Campaigns from './pages/Campaigns';
-import Contacts from './pages/Contacts';
-import Reports from './pages/Reports';
+import Header from "./components/Header";
+import Dashboard from "./pages/Dashboard";
+import Campaigns from "./pages/Campaigns";
+import Contacts from "./pages/Contacts";
+import Companies from "./pages/Companies";
+import Reports from "./pages/Reports";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
   },
 });
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/campaigns" element={<Campaigns />} />
             <Route path="/contacts" element={<Contacts />} />
+            <Route path="/companies" element={<Companies />} />
             <Route path="/reports" element={<Reports />} />
           </Routes>
         </Container>

@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Campaign = require('../models/Campaign');
+const Campaign = require("../models/Campaign");
 
 // GET /api/campaigns - Get all campaigns
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const campaigns = await Campaign.find().sort({ createdAt: -1 });
     res.json(campaigns);
@@ -13,11 +13,11 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/campaigns/:id - Get a specific campaign
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const campaign = await Campaign.findById(req.params.id);
     if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({ message: "Campaign not found" });
     }
     res.json(campaign);
   } catch (error) {
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/campaigns - Create a new campaign
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const campaign = new Campaign(req.body);
     const savedCampaign = await campaign.save();
@@ -37,15 +37,14 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/campaigns/:id - Update a campaign
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const campaign = await Campaign.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
-      { new: true, runValidators: true }
-    );
+    const campaign = await Campaign.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({ message: "Campaign not found" });
     }
     res.json(campaign);
   } catch (error) {
@@ -54,13 +53,13 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE /api/campaigns/:id - Delete a campaign
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const campaign = await Campaign.findByIdAndDelete(req.params.id);
     if (!campaign) {
-      return res.status(404).json({ message: 'Campaign not found' });
+      return res.status(404).json({ message: "Campaign not found" });
     }
-    res.json({ message: 'Campaign deleted successfully' });
+    res.json({ message: "Campaign deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
