@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Company = require("../models/company");
+const { handleDatabaseError } = require("../utils/errorHandler");
 
 // GET /api/companies - Get all companies
 router.get("/", async (req, res) => {
@@ -8,7 +9,9 @@ router.get("/", async (req, res) => {
     const companies = await Company.find().sort({ createdAt: -1 });
     res.json(companies);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching companies:", error);
+    const errorMessage = handleDatabaseError(error, "fetch companies");
+    res.status(500).json({ message: errorMessage });
   }
 });
 

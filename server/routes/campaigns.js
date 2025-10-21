@@ -1,14 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const Campaign = require("../models/Campaign");
+const { handleDatabaseError } = require("../utils/errorHandler");
 
 // GET /api/campaigns - Get all campaigns
 router.get("/", async (req, res) => {
   try {
+    console.log("Fetching campaigns...");
     const campaigns = await Campaign.find().sort({ createdAt: -1 });
+    console.log(`Found ${campaigns.length} campaigns`);
     res.json(campaigns);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching campaigns:", error);
+    const errorMessage = handleDatabaseError(error, "fetch campaigns");
+    res.status(500).json({ message: errorMessage });
   }
 });
 
@@ -21,7 +26,9 @@ router.get("/:id", async (req, res) => {
     }
     res.json(campaign);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching campaign by ID:", error);
+    const errorMessage = handleDatabaseError(error, "fetch campaign");
+    res.status(500).json({ message: errorMessage });
   }
 });
 
@@ -32,18 +39,8 @@ router.post("/", async (req, res) => {
     const savedCampaign = await campaign.save();
     res.status(201).json(savedCampaign);
   } catch (error) {
-    let errorMessage = "Failed to create campaign";
-
-    if (error.name === "ValidationError") {
-      const validationErrors = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      errorMessage = validationErrors.join(", ");
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
     console.error("Campaign creation error:", error);
+    const errorMessage = handleDatabaseError(error, "create campaign");
     res.status(400).json({ message: errorMessage });
   }
 });
@@ -60,18 +57,8 @@ router.put("/:id", async (req, res) => {
     }
     res.json(campaign);
   } catch (error) {
-    let errorMessage = "Failed to update campaign";
-
-    if (error.name === "ValidationError") {
-      const validationErrors = Object.values(error.errors).map(
-        (err) => err.message
-      );
-      errorMessage = validationErrors.join(", ");
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
     console.error("Campaign update error:", error);
+    const errorMessage = handleDatabaseError(error, "update campaign");
     res.status(400).json({ message: errorMessage });
   }
 });
@@ -84,7 +71,9 @@ router.delete("/:id", async (req, res) => {
     }
     res.json({ message: "Campaign deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error deleting campaign:", error);
+    const errorMessage = handleDatabaseError(error, "delete campaign");
+    res.status(500).json({ message: errorMessage });
   }
 });
 
