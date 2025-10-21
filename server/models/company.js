@@ -15,14 +15,18 @@ const companySchema = new mongoose.Schema(
     },
     size: {
       type: String,
-      enum: [
-        "less than 30",
-        "30 to 60",
-        "60 to 100",
-        "100 to 300",
-        "300-1000",
-        "more than 1,000",
-      ],
+      enum: {
+        values: [
+          "",
+          "less than 30",
+          "30 to 60",
+          "60 to 100",
+          "100 to 300",
+          "300-1000",
+          "more than 1,000",
+        ],
+        message: "Invalid company size",
+      },
     },
     industry: {
       type: String,

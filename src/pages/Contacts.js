@@ -106,6 +106,12 @@ const Contacts = () => {
 
   const handleSubmit = async () => {
     try {
+      // Require companyCode for all contacts
+      if (!formData.companyCode) {
+        setError("Please select a company for this contact.");
+        return;
+      }
+
       const submitData = {
         ...formData,
         lastContacted: formData.lastContacted
@@ -343,8 +349,34 @@ const Contacts = () => {
                 }));
               }}
               renderInput={(params) => (
-                <TextField {...params} label="Company" fullWidth />
+                <TextField
+                  {...params}
+                  label="Company"
+                  required
+                  fullWidth
+                  error={
+                    !formData.companyCode && error.includes("select a company")
+                  }
+                  helperText={
+                    !formData.companyCode && error.includes("select a company")
+                      ? "Please select a company"
+                      : "Select from existing companies or type a new company code"
+                  }
+                />
               )}
+              renderOption={(props, option) => (
+                <li {...props}>
+                  <div>
+                    <strong>{option.name}</strong>
+                    <br />
+                    <small style={{ color: "#666" }}>
+                      Code: {option.companyCode} | Industry:{" "}
+                      {option.industry || "N/A"}
+                    </small>
+                  </div>
+                </li>
+              )}
+              noOptionsText="No companies found. You may need to add a company first."
               freeSolo
               onInputChange={(event, newInputValue) => {
                 if (event && event.type === "change") {
@@ -355,6 +387,7 @@ const Contacts = () => {
                 }
               }}
             />
+            companyCode: newInputValue, })); } }} />
             <TextField
               label="Position"
               value={formData.position}

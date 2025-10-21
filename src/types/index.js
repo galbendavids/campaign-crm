@@ -40,7 +40,7 @@ export const defaultContact = {
   lastName: "",
   email: "",
   phone: "",
-  companyCode: "",
+  companyCode: "", // Will be required to be filled by user
   position: "",
   status: ContactStatus.LEAD,
   source: "",

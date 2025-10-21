@@ -25,6 +25,7 @@ const contactSchema = new mongoose.Schema(
     },
     companyCode: {
       type: String,
+      required: [true, "Company code is required"],
       trim: true,
       ref: "Company",
     },

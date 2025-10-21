@@ -32,7 +32,19 @@ router.post("/", async (req, res) => {
     const savedCampaign = await campaign.save();
     res.status(201).json(savedCampaign);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    let errorMessage = "Failed to create campaign";
+
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      errorMessage = validationErrors.join(", ");
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    console.error("Campaign creation error:", error);
+    res.status(400).json({ message: errorMessage });
   }
 });
 
@@ -48,10 +60,21 @@ router.put("/:id", async (req, res) => {
     }
     res.json(campaign);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    let errorMessage = "Failed to update campaign";
+
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      errorMessage = validationErrors.join(", ");
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    console.error("Campaign update error:", error);
+    res.status(400).json({ message: errorMessage });
   }
 });
-
 // DELETE /api/campaigns/:id - Delete a campaign
 router.delete("/:id", async (req, res) => {
   try {

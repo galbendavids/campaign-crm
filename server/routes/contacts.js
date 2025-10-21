@@ -44,7 +44,21 @@ router.post("/", async (req, res) => {
     const savedContact = await contact.save();
     res.status(201).json(savedContact);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    let errorMessage = "Failed to create contact";
+
+    if (error.code === 11000) {
+      errorMessage = "A contact with this email already exists.";
+    } else if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      errorMessage = validationErrors.join(", ");
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    console.error("Contact creation error:", error);
+    res.status(400).json({ message: errorMessage });
   }
 });
 
@@ -60,10 +74,23 @@ router.put("/:id", async (req, res) => {
     }
     res.json(contact);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    let errorMessage = "Failed to update contact";
+
+    if (error.code === 11000) {
+      errorMessage = "A contact with this email already exists.";
+    } else if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      errorMessage = validationErrors.join(", ");
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    console.error("Contact update error:", error);
+    res.status(400).json({ message: errorMessage });
   }
 });
-
 // DELETE /api/contacts/:id - Delete a contact
 router.delete("/:id", async (req, res) => {
   try {
