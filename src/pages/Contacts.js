@@ -52,11 +52,14 @@ const Contacts = () => {
   const fetchContacts = async () => {
     try {
       setLoading(true);
-      const response = await contactApi.getAll({ populate: "company" });
+      const response = await contactApi.getAll();
       setContacts(response.data);
       setError("");
     } catch (err) {
-      setError("Failed to fetch contacts: " + err.message);
+      setError(
+        "Failed to fetch contacts: " +
+          (err.response?.data?.message || err.message)
+      );
     } finally {
       setLoading(false);
     }

@@ -2,25 +2,19 @@ const express = require("express");
 const router = express.Router();
 const Contact = require("../models/Contact");
 const Company = require("../models/company");
+const { handleDatabaseError } = require("../utils/errorHandler");
 
 // GET /api/contacts - Get all contacts
 router.get("/", async (req, res) => {
   try {
-    const { populate } = req.query;
-    let query = Contact.find().sort({ createdAt: -1 });
-
-    if (populate === "company" || populate === "all") {
-      query = query.populate({
-        path: "companyCode",
-        match: { companyCode: { $exists: true } },
-        select: "name companyCode industry size country",
-      });
-    }
-
-    const contacts = await query;
+    console.log("Fetching contacts...");
+    const contacts = await Contact.find().sort({ createdAt: -1 });
+    console.log(`Found ${contacts.length} contacts`);
     res.json(contacts);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching contacts:", error);
+    const errorMessage = handleDatabaseError(error, "fetch contacts");
+    res.status(500).json({ message: errorMessage });
   }
 });
 
@@ -33,7 +27,9 @@ router.get("/:id", async (req, res) => {
     }
     res.json(contact);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching contact by ID:", error);
+    const errorMessage = handleDatabaseError(error, "fetch contact");
+    res.status(500).json({ message: errorMessage });
   }
 });
 
@@ -100,7 +96,9 @@ router.delete("/:id", async (req, res) => {
     }
     res.json({ message: "Contact deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error deleting contact:", error);
+    const errorMessage = handleDatabaseError(error, "delete contact");
+    res.status(500).json({ message: errorMessage });
   }
 });
 

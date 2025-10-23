@@ -21,11 +21,7 @@ export const campaignApi = {
 
 // Contact API
 export const contactApi = {
-  getAll: (options = {}) => {
-    const { populate } = options;
-    const params = populate ? { populate } : {};
-    return api.get("/contacts", { params });
-  },
+  getAll: () => api.get("/contacts"),
   getById: (id) => api.get(`/contacts/${id}`),
   create: (data) => api.post("/contacts", data),
   update: (id, data) => api.put(`/contacts/${id}`, data),
