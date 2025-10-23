@@ -10,7 +10,34 @@ This means MongoDB is not running on your system.
 
 ## Quick Fix
 
-### Option 1: Install MongoDB locally (Recommended for Development)
+### Option 1: Use Docker (Easiest - Recommended)
+
+If you have Docker installed, this is the simplest solution:
+
+```bash
+# Start MongoDB with our helper script
+./start-mongodb.sh
+
+# Or manually:
+docker run -d --name campaign-crm-mongodb -p 27017:27017 -v mongodb_data:/data/db mongo:7.0
+```
+
+**Managing MongoDB:**
+```bash
+# Stop MongoDB
+docker stop campaign-crm-mongodb
+
+# Start MongoDB again
+docker start campaign-crm-mongodb
+
+# View logs
+docker logs campaign-crm-mongodb
+
+# Remove container (data is preserved in volume)
+docker rm campaign-crm-mongodb
+```
+
+### Option 2: Install MongoDB locally
 
 **On macOS:**
 ```bash
