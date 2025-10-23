@@ -390,7 +390,6 @@ const Contacts = () => {
                 }
               }}
             />
-            companyCode: newInputValue, })); } }} />
             <TextField
               label="Position"
               value={formData.position}
