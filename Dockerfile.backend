@@ -1,0 +1,36 @@
+# Dockerfile for Backend (Express API) - RunPod Deployment
+# This runs ONLY the Express server, not the React frontend
+# The frontend will be deployed separately on Hugging Face Spaces
+
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install production dependencies only
+# This keeps the image small and secure
+RUN npm ci --only=production
+
+# Copy only the backend server code
+# We don't need the src/ folder (React frontend) for this deployment
+COPY server/ ./server/
+
+# Copy .env file (you'll need to create .env with your MongoDB Atlas URI)
+# IMPORTANT: Make sure to add .env to .gitignore so secrets aren't committed
+COPY .env ./
+
+# Expose the API port
+# RunPod will map this to an external endpoint
+EXPOSE 5000
+
+# Health check to ensure the container is running properly
+# RunPod uses this to verify the service is healthy
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start the Express server
+# Using 'node' directly instead of 'npm' for faster startup in production
+CMD ["node", "server/index.js"]

@@ -1,0 +1,54 @@
+# .dockerignore - Excludes unnecessary files from Docker build context
+# This reduces the Docker image size and speeds up builds
+
+# Frontend files (not needed for backend-only Docker image)
+src/
+public/
+build/
+
+# Node modules (will be installed fresh in container)
+node_modules/
+
+# Development and testing files
+tests/
+*.test.js
+*.test.jsx
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment files (sensitive data)
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Build artifacts
+dist/
+coverage/
+
+# Temporary files
+tmp/
+temp/
